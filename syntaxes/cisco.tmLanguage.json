@@ -63,7 +63,7 @@
 				},
 				{
 					"begin": "(^voice service voip)(?=\\s|$)",
-					"end": "!",
+					"end": "(?=!)",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-service.cisco"}
 					},
@@ -96,21 +96,22 @@
 			"patterns": [
 				{
 					"begin": "(voice class)\\s",
-					"end": "(^[^\\s])",
+					"end": "^(?=[^\\s])",
 					"name": "meta.section.voice-class.cisco",
 					"beginCaptures": {
 						"1": {"name": "entity.name.section.voice-class.cisco"}
 					},
 					"patterns": [
 						{"include": "#voice-class-uri"},
-						{"include": "#voice-class-codec"}
+						{"include": "#voice-class-codec"},
+						{"include": "#voice-class-e164-pm"}
 					]
 				}
 			],
 			"repository": {
 				"voice-class-uri": {
 					"begin": "(uri)\\s(\\d*)\\s(sip)(?=\\s|$)",
-					"end": "(^[^\\s])",
+					"end": "^(?=[^\\s])",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.uri.cisco"},
 						"2": {"name": "constant.numeric.cisco"}
@@ -126,8 +127,8 @@
 					]
 				},
 				"voice-class-codec": {
-					"begin": "\\s(codec)\\s(\\d*)(?=\\s|$)",
-					"end": "(^[^\\s])",
+					"begin": "(codec)\\s(\\d*)(?=\\s|$)",
+					"end": "^(?=[^\\s])",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.codec.cisco"},
 						"2": {"name": "constant.numeric.cisco"}
@@ -139,12 +140,38 @@
 							
 							"match": "([Cc]odec)\\s([Pp]reference)\\s(\\d*)\\s(g711ulaw|g711alaw|g729r8|g729abr8|g729ar8|g729br8|g729r12|g729abr12|g729ar12|g729br12|g729r14|g729abr14|g729ar14|g729br14|g729r8annexb|g729abr8annexb|g729ar8annexb|g729br8annexb|g729r12annexb|g729abr12annexb|g729ar12annexb|g729br12annexb|g729r14annexb|g729abr14annexb|g729ar14annexb|g729br14annexb|g729r8annexa|g729abr8annexa|g729ar8annexa|g729br8annexa|g729r12annexa|g729abr12annexa|g729ar12annexa|g729br12annexa|g729r14annexa|g729abr14annexa|g729ar14annexa|g729br14annexa|g729r8annexbannexa|g729abr8annexbannexa|g729ar8annexbannexa|g729br8annexbannexa|g729r12annexbannexa|g729abr12annexbannexa|g729ar12annexbannexa|g729br12annexbannexa|g729r14annexbannexa|g729abr14annexbannexa|g729ar14annexbannexa|g729br14annexbannexa|g729r8annexbannexa|g729abr8annexbannexa|g729ar8annexbannexa|g729br8annexbannexa|g729r12annexbannexa|g729abr12annexbannexa|g729ar12annexbannexa|g729br12annexbannexa)(?=\\s|$)",
 							"captures": {
-								"1": {"name": "keyword.other.config-keyword.codec.cisco"},
+								"1": {"name": "keyword.other.config-keyword.voice-class.codec.cisco"},
 								"3": {"name": "constant.numeric.cisco"},
 								"4": {"name": "storage.type.codec.cisco"}
 							}
 						}
 					]
+				},
+				"voice-class-e164-pm": {
+					"being": "(e164-pattern-map)\\s(\\d*)(?=\\s|$)",
+					"end": "^(?=[^\\s])",
+					"beginCaptures": {
+						"1": {"name": "keyword.other.config-keyword.voice-class.e164-pattern-map.cisco"},
+						"2": {"name": "constant.numeric.cisco"}
+					},
+					"patterns": [
+						{"include": "#string"},
+						{
+							"match": "(\\s*)(e164)\\s([\\+\\d\\[\\]\\.\\-]*)",
+							"captures": {
+								"2": {"name": "keyword.other.config-keyword.e164-pattern.cisco"},
+								"3": {"name": "storage.type.telephone.cisco"}
+							}
+						}
+					]
+				},
+				"voice-class-server-group": {
+					"begin": "(server-group)\\s(\\d*)(?=\\s|$)",
+					"end": "^(?=[^\\s])",
+					"beginCaptures": {
+						"1": {"name": "keyword.other.config-keyword.voice-class.server-group.cisco"},
+						"2": {"name": "constant.numeric.cisco"}
+					},
 				}
 			}
 		},
