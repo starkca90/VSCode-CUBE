@@ -1,0 +1,29 @@
+{
+  "name": "cisco-ios-voice",
+  "displayName": "Cisco IOS with Voice",
+  "description": "Cisco IOS XE syntax highlighting with voice support",
+  "version": "0.0.1",
+  "publisher": "caseystark",
+  "engines": {
+    "vscode": "^1.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starkca90/VSCode-CUBE.git"},
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "cisco",
+      "aliases": ["Cisco Config voice", "cisco", "Cisco", "CUBE"],
+      "extensions": [".cisco",".ios",".cube"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "cisco",
+      "scopeName": "source.cisco",
+      "path": "./syntaxes/cisco.tmLanguage.json"
+    }]
+  }
+}
