@@ -58,9 +58,8 @@
 	"repository": {
 		"voice": {
 			"patterns": [
-				{
-					"include": "#voice-class"
-				},
+				{"include": "#voice-class"},
+				{"include": "#voice-translation"},
 				{
 					"begin": "(^voice service voip)(?=\\s|$)",
 					"end": "(?=!)",
@@ -92,19 +91,92 @@
 				}
 			]
 		},
+		"voice-translation": {
+			"patterns": [
+				{
+					"begin": "^(voice)\\s(?=translation)",
+					"end": "^(?=[^\\s])",
+					"name": "meta.section.voice-translation.cisco",
+					"beginCaptures": {
+						"1": {"name": "entity.name.section.voice.cisco"}
+					},
+					"patterns": [
+						{"include": "#voice-translation-rule"},
+						{"include": "#voice-translation-profile"}
+					]
+				}
+			],
+			"repository": {
+				"voice-translation-profile": {
+					"begin": "(translation-profile)\\s(.*)$",
+					"end": "^(?=[^\\s])",
+					"name": "meta.type.voice.translation.profile.cisco",
+					"beginCaptures": {
+						"1": {"name": "entity.name.type.voice.translation.profile.cisco"},
+						"2": {"name": "constant.numeric.cisco"}
+					},
+					"patterns": [
+						{
+							"match": "(translate)\\s(callback\\-number|called|calling|redirect\\-called|redirect\\-target)\\s(\\d*)",
+							"captures": {
+								"1": {"name": "entity.name.type.voice.translation.profile.translate.cisco"},
+								"2": {"name": "keyword.other.config-keyword.voice.translate.type.cisco"},
+								"3": {"name": "storage.type.voice.translation.rule.cisco"}
+							}
+						}
+					]
+				},
+				"voice-translation-rule": {
+					"begin": "(translation-rule)\\s(\\d*)",
+					"end": "^(?=[^\\s])",
+					"name": "meta.type.voice.translation.rule.cisco",
+					"beginCaptures": {
+						"1": {"name": "entity.name.type.voice.translation.rule.cisco"},
+						"2": {"name": "storage.type.voice.translation.rule.cisco"}
+					},
+					"patterns": [
+						{"include": "#translation-regex"},
+						{
+							"match": "(^\\s)(rule)\\s(\\d*)\\s(?=\/.*\/\\s\/.*\/)",
+							"captures": {
+								"2": {"name": "entity.name.type.voice.translation.rule.cisco"},
+								"3": {"name": "constant.numeric.cisco"}
+							}
+						}
+					]
+				}
+			}
+		},
+		"translation-regex": {
+			"patterns": [
+				{
+					"match": "(\/)",
+					"name": "storage.type.voice.translation.container.cisco"
+				},
+				{
+					"begin": "([[:punct:]]\\()",
+					"end": "([[:punct:]]\\))",
+					"name": "storage.type.voice.translation.capture.cisco"
+				}
+			]
+		},
 		"voice-class": {
 			"patterns": [
 				{
-					"begin": "(voice class)\\s",
+					"begin": "(voice)\\s(class)\\s",
 					"end": "^(?=[^\\s])",
 					"name": "meta.section.voice-class.cisco",
 					"beginCaptures": {
-						"1": {"name": "entity.name.section.voice-class.cisco"}
+						"1": {"name": "entity.name.section.voice.cisco"},
+						"2": {"name": "entity.name.type.voice.class.cisco"}
 					},
 					"patterns": [
+
 						{"include": "#voice-class-uri"},
 						{"include": "#voice-class-codec"},
-						{"include": "#voice-class-e164-pm"}
+						{"include": "#voice-class-e164-pm"},
+						{"include": "#voice-class-server-group"},
+						{"include": "#voice-class-sip-options-keepalive"}
 					]
 				}
 			],
@@ -112,12 +184,14 @@
 				"voice-class-uri": {
 					"begin": "(uri)\\s(\\d*)\\s(sip)(?=\\s|$)",
 					"end": "^(?=[^\\s])",
+					"name": "meta.section.voice-class.uri.cisco",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.uri.cisco"},
 						"2": {"name": "constant.numeric.cisco"}
 					},
 					"patterns": [
 						{"include": "#string"},
+						{"include": "#comment"},
 						{
 							"match": "(\\s)(host)\\s(.*)",
 							"captures": {
@@ -129,15 +203,15 @@
 				"voice-class-codec": {
 					"begin": "(codec)\\s(\\d*)(?=\\s|$)",
 					"end": "^(?=[^\\s])",
+					"name": "meta.section.voice-class.codec.cisco",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.codec.cisco"},
 						"2": {"name": "constant.numeric.cisco"}
 					},
 					"patterns": [
 						{"include": "#string"},
-						{
-
-							
+						{"include": "#comment"},
+						{						
 							"match": "([Cc]odec)\\s([Pp]reference)\\s(\\d*)\\s(g711ulaw|g711alaw|g729r8|g729abr8|g729ar8|g729br8|g729r12|g729abr12|g729ar12|g729br12|g729r14|g729abr14|g729ar14|g729br14|g729r8annexb|g729abr8annexb|g729ar8annexb|g729br8annexb|g729r12annexb|g729abr12annexb|g729ar12annexb|g729br12annexb|g729r14annexb|g729abr14annexb|g729ar14annexb|g729br14annexb|g729r8annexa|g729abr8annexa|g729ar8annexa|g729br8annexa|g729r12annexa|g729abr12annexa|g729ar12annexa|g729br12annexa|g729r14annexa|g729abr14annexa|g729ar14annexa|g729br14annexa|g729r8annexbannexa|g729abr8annexbannexa|g729ar8annexbannexa|g729br8annexbannexa|g729r12annexbannexa|g729abr12annexbannexa|g729ar12annexbannexa|g729br12annexbannexa|g729r14annexbannexa|g729abr14annexbannexa|g729ar14annexbannexa|g729br14annexbannexa|g729r8annexbannexa|g729abr8annexbannexa|g729ar8annexbannexa|g729br8annexbannexa|g729r12annexbannexa|g729abr12annexbannexa|g729ar12annexbannexa|g729br12annexbannexa)(?=\\s|$)",
 							"captures": {
 								"1": {"name": "keyword.other.config-keyword.voice-class.codec.cisco"},
@@ -148,14 +222,16 @@
 					]
 				},
 				"voice-class-e164-pm": {
-					"being": "(e164-pattern-map)\\s(\\d*)(?=\\s|$)",
+					"begin": "(e164-pattern-map)\\s(\\d*)(?=\\s|$)",
 					"end": "^(?=[^\\s])",
+					"name": "meta.section.voice-class.e164-pattern-map.cisco",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.e164-pattern-map.cisco"},
 						"2": {"name": "constant.numeric.cisco"}
 					},
 					"patterns": [
 						{"include": "#string"},
+						{"include": "#comment"},
 						{
 							"match": "(\\s*)(e164)\\s([\\+\\d\\[\\]\\.\\-]*)",
 							"captures": {
@@ -168,10 +244,43 @@
 				"voice-class-server-group": {
 					"begin": "(server-group)\\s(\\d*)(?=\\s|$)",
 					"end": "^(?=[^\\s])",
+					"name": "meta.section.voice-class.server-group.cisco",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.server-group.cisco"},
 						"2": {"name": "constant.numeric.cisco"}
 					},
+					"patterns": [
+						{"include": "#string"},
+						{"include": "#comment"},
+						{
+							"match": "(\\s*)(ipv[46])\\s(.*)\\s([Pp]reference)\\s(\\d*)",
+							"captures": {
+								"2": {"name": "keyword.other.config-keyword.voice-class.server-group.ip.cisco"},
+								"3": {"name": "storage.type.ip.cisco"},
+								"5": {"name": "constant.numeric.cisco"}
+							}
+						}
+					]
+				},
+				"voice-class-sip-options-keepalive": {
+					"begin": "(sip-options-keepalive)\\s(\\d*)(?=\\s|$)",
+					"end": "^(?=[^\\s])",
+					"name": "meta.section.voice-class.sip-options-keepalive.cisco",
+					"beginCaptures": {
+						"1": {"name": "keyword.other.config-keyword.voice-class.sip-options-keepalive.cisco"},
+						"2": {"name": "constant.numeric.cisco"}
+					},
+					"patterns": [
+						{"include": "#string"},
+						{"include": "#comment"},
+						{"include": "#numeric"},
+						{
+							"match": "(\\s*)(transport)\\s(udp|tcp|system)",
+							"captures": {
+								"3": {"name": "storage.type.transport.cisco"}
+							}
+						}
+					]
 				}
 			}
 		},
@@ -249,6 +358,15 @@
 					"include": "#voiceport"
 				},
 				{
+					"include": "#voice-card"
+				},
+				{
+					"include": "#controller"
+				},
+				{
+					"include": "#service-engine"
+				},
+				{
 					"include": "#ethernet"
 				},
 				{
@@ -296,8 +414,20 @@
 			],
 			"repository": {
 				"voiceport": {
-					"name": "entity.name.class.interface.voiceport.cisco",
+					"name": "entity.name.class.interface.voice.port.cisco",
 					"match": "\\b([Vv]oice-[Pp]ort)(([0-1]([\\./]\\d)?(\\.\\d+)?)?\\b)"
+				},
+				"voice-card": {
+					"name": "entity.name.class.interface.voice.card.cisco",
+					"match": "\\b[Vv]oice-[Cc]ard\\s[0-1]([\\./]\\d)?([\\./]\\d+)?\\b"
+				},
+				"controller": {
+					"match": "\\b([TtEe]1\\s[0-1]([\\./]\\d)?([\\./]\\d+)?)\\b",
+					"name": "entity.name.class.interface.controller.te1.cisco"
+				},
+				"service-engine": {
+					"match": "\\b([Ss]ervice\\-[Ee]ngine[0-1]([\\./]\\d)?([\\./]\\d+)?)\\b",
+					"name": "entity.name.class.interface.service-engine.cisco"
 				},
 				"ethernet": {
 					"name": "entity.name.class.interface.ethernet.cisco",
@@ -385,7 +515,7 @@
 			"patterns": [
 				{
 					"name": "comment.line.config.cisco",
-					"match": "^\\s*[!#].*"
+					"match": "^\\s*[!#].*?"
 				}
 			]
 		},

@@ -6,27 +6,20 @@
     // symbols used as brackets
     "brackets": [
         ["^C", "^C"],
-        ["{", "}"],
+        ["\\(", "\\)"],
         ["[", "]"],
-        ["(", ")"]
     ],
     // symbols that are auto closed when typing
     "autoClosingPairs": [
         ["^C", "^C"],
-        ["{", "}"],
+        ["\\(", "\\)"],
         ["[", "]"],
-        ["(", ")"],
-        ["\"", "\""],
-        ["'", "'"]
     ],
     // symbols that can be used to surround a selection
     "surroundingPairs": [
         ["^C", "^C"],
-        ["{", "}"],
+        ["\\(", "\\)"],
         ["[", "]"],
-        ["(", ")"],
-        ["\"", "\""],
-        ["'", "'"]
     ],
     "folding": {
         "markers": {
