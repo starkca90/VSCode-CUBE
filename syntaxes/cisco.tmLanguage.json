@@ -60,6 +60,7 @@
 			"patterns": [
 				{"include": "#voice-class"},
 				{"include": "#voice-translation"},
+				{"include": "#dial-peer"},
 				{
 					"begin": "(^voice service voip)(?=\\s|$)",
 					"end": "(?=!)",
@@ -157,6 +158,41 @@
 					"begin": "([[:punct:]]\\()",
 					"end": "([[:punct:]]\\))",
 					"name": "storage.type.voice.translation.capture.cisco"
+				},
+				{
+					"match": "([[:punct:]]\\d)",
+					"name": "storage.type.voice.translation.capture.cisco"
+				}
+			]
+		},
+		"dial-peer": {
+			"begin": "^(dial-peer)\\s(voice)\\s(\\d*)\\s(pots|voip)$",
+			"end": "^(?=[^\\s])",
+			"name": "meta.type.voice.dial-peer.cisco",
+			"captures": {
+				"1": {"name": "entity.name.section.voice.dial-peer.cisco"},
+				"2": {"name": "entity.name.type.voice.dial-peer.cisco"},
+				"3": {"name": "storage.type.voice.dial-peer.cisco"},
+				"4": {"name": "keyword.other.config-keyword.voice.dial-peer.type.cisco"}
+			},
+			"patterns": [
+				{"include": "#string"},
+				{"include": "#comment"},
+				{
+					"match": "(^|\\s)(trunkgroup)\\s(.*)(?=\\s|$)",
+					"name": "meta.type.voice.trunk-group.cisco",
+					"captures": {
+						"3": {"name": "storage.type.trunk-group.cisco"}
+					}
+				},
+				{
+					"match": "(^|\\s)(voice-class)\\s(codec)\\s(\\d*)(?=\\s|$)",
+					"name": "meta.section.voice-class.codec.cisco",
+					"captures": {
+						"2": {"name": "entity.name.type.voice.class.cisco"},
+						"3": {"name": "keyword.other.config-keyword.voice-class.codec.cisco"},
+						"4": {"name": "storage.type.voice.class.codec.cisco"}
+					}
 				}
 			]
 		},
@@ -187,7 +223,7 @@
 					"name": "meta.section.voice-class.uri.cisco",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.uri.cisco"},
-						"2": {"name": "constant.numeric.cisco"}
+						"2": {"name": "storage.type.voice.class.uri.cisco"}
 					},
 					"patterns": [
 						{"include": "#string"},
@@ -206,7 +242,7 @@
 					"name": "meta.section.voice-class.codec.cisco",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.codec.cisco"},
-						"2": {"name": "constant.numeric.cisco"}
+						"2": {"name": "storage.type.voice.class.codec.cisco"}
 					},
 					"patterns": [
 						{"include": "#string"},
@@ -216,7 +252,7 @@
 							"captures": {
 								"1": {"name": "keyword.other.config-keyword.voice-class.codec.cisco"},
 								"3": {"name": "constant.numeric.cisco"},
-								"4": {"name": "storage.type.codec.cisco"}
+								"4": {"name": "storage.type.voice.class.codec.cisco"}
 							}
 						}
 					]
@@ -227,7 +263,7 @@
 					"name": "meta.section.voice-class.e164-pattern-map.cisco",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.e164-pattern-map.cisco"},
-						"2": {"name": "constant.numeric.cisco"}
+						"2": {"name": "storage.type.voice.class.e164-pattern-map.cisco"}
 					},
 					"patterns": [
 						{"include": "#string"},
@@ -247,7 +283,7 @@
 					"name": "meta.section.voice-class.server-group.cisco",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.server-group.cisco"},
-						"2": {"name": "constant.numeric.cisco"}
+						"2": {"name": "storage.type.voice.class.server-group.cisco"}
 					},
 					"patterns": [
 						{"include": "#string"},
@@ -268,7 +304,7 @@
 					"name": "meta.section.voice-class.sip-options-keepalive.cisco",
 					"beginCaptures": {
 						"1": {"name": "keyword.other.config-keyword.voice-class.sip-options-keepalive.cisco"},
-						"2": {"name": "constant.numeric.cisco"}
+						"2": {"name": "storage.type.voice.class.sip-options-keepalive.cisco"}
 					},
 					"patterns": [
 						{"include": "#string"},
@@ -301,6 +337,20 @@
 						}
 					]
 
+				},
+				{
+					"match": "(^|\\s)(trunk group)\\s(.*)(?=\\s|$)",
+					"name": "meta.type.voice.trunk-group.cisco",
+					"captures": {
+						"3": {"name": "storage.type.trunk-group.cisco"}
+					}
+				},
+				{
+					"match": "(^|\\s)(trunk-group)\\s(.*)(?=\\s|$)",
+					"name": "meta.type.voice.trunk-group.cisco",
+					"captures": {
+						"3": {"name": "storage.type.trunk-group.cisco"}
+					}
 				},
 				{
 					"name": "keyword.other.config-keyword.vlan.cisco",
