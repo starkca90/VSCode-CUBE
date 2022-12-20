@@ -60,7 +60,14 @@
 			"patterns": [
 				{"include": "#voice-class"},
 				{"include": "#voice-translation"},
+				{"include": "#sccp"},
+				{"include": "#dspfarm"},
 				{"include": "#dial-peer"},
+				{"include": "#voip-global"}
+			]
+		},
+		"voip-global": {
+			"patterns": [
 				{
 					"begin": "(^voice service voip)(?=\\s|$)",
 					"end": "(?=!)",
@@ -91,6 +98,123 @@
 					]
 				}
 			]
+		},
+		"dspfarm": {
+			"patterns": [
+				{
+					"begin": "(^dspfarm)\\s(profile)\\s(\\d+)\\s(conference|mtp|transcode|video-quality-monitoring)\\s?(.*)?(?=\\s|$)",
+					"end": "^(?=[^\\s])",
+					"name": "meta.type.dspfarm.cisco",
+					"captures": {
+						"1": {"name": "entity.name.section.dspfarm.cisco"},
+						"3": {"name": "storage.type.voice.sccp.profile.identifier.cisco"},
+						"4": {"name": "entity.name.type.dspfarm.cisco"},
+						"5": {"name": "variable.parameter.dspfarm.modifier.cisco"}
+					},
+					"patters": [
+						{"include": "#codec"},
+						{"include": "#string"},
+						{"include": "#comment"}
+					]
+				}
+			],
+			"repository": {
+				"codec": {
+					"patterns": [
+						{
+							"match": "(codec)\\s(g711alaw|g711ulaw|g722-64|g729abr8|g729ar8|g729br8|ilbc|isac|opus|pass-through)(?=\\s|$)",
+							"name": "meta.type.dspfarm.codec.cisco",
+							"captures": {
+								"3": {"name": "storage.type.voice.codec.cisco"}
+							}
+						}
+					]
+				}
+			}
+		},
+		"sccp": {
+			"patterns": [
+				{
+					"match": "^(sccp)\\s(local)\\s(.*)$",
+					"name": "meta.type.sccp.local.cisco",
+					"captures": {
+						"1": {"name": "entity.name.section.sccp.cisco"},
+						"2": {"name": "entity.name.type.sccp.local.cisco"},
+						"3": {"name": "entity.name.class.interface"}
+					}
+				},
+				{
+					"begin": "^(sccp)\\s(ccm)\\s(group)\\s(\\d+)$",
+					"end": "^(?=[^\\s])",
+					"name": "meta.type.sccp.ccm.group.cisco",
+					"beginCaptures": {
+						"1": {"name": "entity.name.section.sccp.cisco"},
+						"2": {"name": "entity.name.type.sccp.ccm.cisco"},
+						"3": {"name": "entity.name.function.sccp.ccm.group.cisco"},
+						"4": {"name": "storage.type.voice.sccp.ccm.group.cisco"}
+					},
+					"patterns": [
+						{"include": "#sccp-ccm"}
+					]
+				},
+				{
+					"match": "^(sccp)\\s(ccm)\\s(.*)\\s(identifier)\\s(\\d+).*",
+					"name": "meta.type.sccp.ccm.entry.cisco",
+					"captures": {
+						"1": {"name": "entity.name.section.sccp.cisco"},
+						"2": {"name": "entity.name.type.sccp.ccm.cisco"},
+						"3": {"name": "keyword.other.address.cisco"},
+						"5": {"name": "storage.type.voice.sccp.ccm.identifier.cisco"}
+					}
+				},
+				{
+					"match": "^(sccp)\\s(ip)\\s(precedence)\\s([1-7])",
+					"name": "meta.type.sccp.ip.cisco",
+					"captures": {
+						"1": {"name": "entity.name.section.sccp.cisco"},
+						"2": {"name": "entity.name.type.sccp.ip.cisco"},
+						"4": {"name": "constant.numeric.cisco"}
+					}
+				},
+				{
+					"match": "^(sccp)$",
+					"name": "meta.type.sccp.cisco",
+					"captures": {
+						"1": {"name": "entity.name.section.sccp.cisco"}
+					}
+				}
+			],
+			"repository": {
+				"sccp-ccm": {
+					"patterns": [
+						{"include": "#string"},
+						{"include": "#comment"},
+						{
+							"match": "(^\\s)(bind)\\s(interface)\\s(.*)$",
+							"captures": {
+								"2": {"name": "keyword.other.voice.sccp.bind.cisco"},
+								"4": {"name": "entity.name.class.interface"}
+							}
+						},
+						{
+							"match": "(^\\s)(associate)\\s(ccm)\\s(\\d*)\\s(priority)\\s([1-4])$",
+							"captures": {
+								"2": {"name": "keyword.other.voice.sccp.associate.cisco"},
+								"4": {"name": "storage.type.voice.sccp.ccm.identifier.cisco"},
+								"6": {"name": "constant.numeric.voice.sccp.ccm.priority.cisco"}
+							}
+						},
+						{
+							"match": "(^\\s)(associate)\\s(profile)\\s(\\d*)\\s(register)\\s(.*)$",
+							"captures": {
+								"2": {"name": "keyword.other.voice.sccp.associate.cisco"},
+								"4": {"name": "storage.type.voice.sccp.profile.identifier.cisco"},
+								"6": {"name": "storage.type.voice.sccp.register.cisco"}
+							}
+						}
+					]
+				}
+			}
 		},
 		"voice-translation": {
 			"patterns": [
